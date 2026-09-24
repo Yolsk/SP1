@@ -16,17 +16,12 @@ public class SP1HeroBuilder {
             isAlive = true;
             this.name = name;
             this.maxHealth = maxHealth;
-            this.healthPoints = maxHealth;
+            this.healthPoints = maxHealth;  // starter med max liv
             this.level = level;
             this.experiencePoints = experiencePoints;
             this.gold = gold;
             this.classType = classType;
             this.attackPower = attackPower;
-        }
-
-        Character(String name, char classType) {
-            this.name = name;
-            this.classType = classType;
         }
 
 
@@ -64,7 +59,7 @@ public class SP1HeroBuilder {
             if (healthPoints <= 0) {
                 isAlive = false;
                 System.out.println(name + " is dead");
-                healthPoints = 0;
+                healthPoints = 0; //Overkill, man kan ikke have minus liv
 
             } else {
                 System.out.println("Incoming damage: " + amount);
@@ -77,9 +72,10 @@ public class SP1HeroBuilder {
             target.takeDamage(attackPower);
         }
         void heal(int amount) {
+            System.out.println(name + " is healing");
             healthPoints += amount;
             if (healthPoints > maxHealth) {
-                healthPoints = maxHealth;
+                healthPoints = maxHealth; // Man kan ikke overheal
                 System.out.println(name + " is fully healed");
             } else {
                 System.out.println(name + "'s Health Points: " + healthPoints);
@@ -97,6 +93,7 @@ public class SP1HeroBuilder {
                 System.out.println("Total gold: " + gold);
                 return true;
             }
+            System.out.println("You can't afford " + amount);
             System.out.println("Total gold: " + gold);
             return false;
         }
@@ -113,7 +110,7 @@ public class SP1HeroBuilder {
             level++;
             experiencePoints = 0;
             maxHealth += 20;
-            healthPoints += 20;
+            // healthPoints+= 20;
             System.out.println("Level up!");
             System.out.println("Level: " + level);
             System.out.println("Experience points: " + experiencePoints);
@@ -125,6 +122,7 @@ public class SP1HeroBuilder {
                 System.out.println("Warning: Health critical!");
                 return true;
             }
+            System.out.println(name + "'s health is not critical\n");
             return false;
         }
         boolean isAlive() {
@@ -139,16 +137,16 @@ public class SP1HeroBuilder {
         }
         void printInventory() {
             System.out.println("\nInventory Items for " + name + ": ");
-            if (inventory != null){
-                for (Item item : inventory) {
+            if (inventory == null) {
+                System.out.println("No items");
+            } else {
+                for (Item item : inventory) { // for hvert item i inventory, print name, weight og value
                     System.out.println("\t" + item.name);
                     System.out.println("\t" + item.weight);
                     System.out.println("\t" + item.value);
                     System.out.println();
                 }
                 System.out.println(inventory.length + " items in inventory");
-            } else {
-                System.out.println("No items");
             }
         }
     }
@@ -175,7 +173,7 @@ public class SP1HeroBuilder {
             this.durability = durability;
         }
     }
-        public class Armor extends Item {
+    public class Armor extends Item {
         int defence;
         int durability;
 
@@ -193,7 +191,6 @@ public class SP1HeroBuilder {
         Character character2 = new Character("Isa",80, 3, 1000, 1000, 'M', 20);
 
         character1.printCharacterSheet();
-
         System.out.println();
         character2.printCharacterSheet();
         System.out.println();
@@ -203,21 +200,26 @@ public class SP1HeroBuilder {
 
         Weapon sword = new Weapon("Silver Sword", 10, 10000, 30, 100);
 
-        Armor breastplate = new Armor("Leather Breatplate", 2, 1000,30, 100);
+        Armor breastplate = new Armor("Leather Breastplate", 2, 1000,30, 100);
 
         character1.inventory = new Item[]{cloak, sword, breastplate};
-
 
         character1.printInventory();
         System.out.println();
 
-        // Simuerling af combat //
+        // Simulering af combat //
         System.out.println("/// Engaged Combat /// ");
         character1.attack(character2);
         System.out.println();
         character1.attack(character2);
         System.out.println();
+        character1.heal(10);
+        character2.isAlive();
+        System.out.println();
         character2.attack(character1);
+        System.out.println();
+        character2.isHealthCritical();
+        System.out.println(character2.name + "'s health percentage: " +  character2.getHealthPercentage());
         System.out.println();
         character1.attack(character2);
         System.out.println("/// Combat Ended /// ");
